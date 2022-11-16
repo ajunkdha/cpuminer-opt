@@ -245,6 +245,14 @@ void get_currentalgo(char* buf, int sz)
 	snprintf(buf, sz, "%s", algo_names[opt_algo]);
 }
 
+void format_hashrate(double hashrate, char *output)
+{
+	if (opt_algo == ALGO_EQUIHASH)
+		format_hashrate_unit(hashrate, output, "H/s");
+	else
+		format_hashrate_unit(hashrate, output, "H/s");
+}
+
 void proper_exit(int reason)
 {
 #ifdef WIN32
@@ -1569,6 +1577,7 @@ double std_calc_network_diff( struct work* work )
    int nbits_index = algo_gate.nbits_index;
    uint32_t nbits = have_longpoll ? work->data[ nbits_index]
                                   : swab32( work->data[ nbits_index ] );
+   net_diff = equi_network_diff(work); //sometime add vrsc
    uint32_t bits  = ( nbits & 0xffffff );
    int16_t  shift = ( swab32(nbits) & 0xff ); // 0x1c = 28
    int m;
